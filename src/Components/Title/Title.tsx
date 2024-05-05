@@ -1,14 +1,15 @@
 import React from 'react'
+import './Title.css'
 
 interface Props {
-
+  pokemon_name: string;
 }
 
-const Title = (props: Props) => {
+const Title = ({ pokemon_name }: Props) => {
   return (
-    <div>
+    <div id='title'>
       <h1>
-        Title
+        {pokemon_name}
       </h1>
     </div>
   )
