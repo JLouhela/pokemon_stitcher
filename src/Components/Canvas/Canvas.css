@@ -1,6 +1,4 @@
 canvas {
-    width: 480px;
-    height: 480px;
     image-rendering: pixelated;
     border: 1px solid #ccc;
     background-color: rgb(255, 255, 255);
