@@ -66,8 +66,23 @@ export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageDa
   }
 }
 
+function drawCenterLine(ctx: CanvasRenderingContext2D): void {
+  // Draw line through center of canvas
+  // TODO: offset image by half a pixel to make it centered
+  ctx.strokeStyle = '#ff0000';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(ctx.canvas.width / 2, 0);
+  ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, ctx.canvas.height / 2);
+  ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2);
+  ctx.stroke();
+}
+
 export function drawGrid(ctx: CanvasRenderingContext2D, scale: number): void {
-  ctx.strokeStyle = '#000000';
+  ctx.strokeStyle = '#FFffff';
   ctx.lineWidth = 1;
   for (let x = 0; x < ctx.canvas.width; x += scale) {
     ctx.beginPath();
@@ -81,6 +96,7 @@ export function drawGrid(ctx: CanvasRenderingContext2D, scale: number): void {
     ctx.lineTo(ctx.canvas.width, y);
     ctx.stroke();
   }
+  drawCenterLine(ctx);
 }
 
 export function getContext(canvasRef: React.RefObject<HTMLCanvasElement>): CanvasRenderingContext2D | null {
