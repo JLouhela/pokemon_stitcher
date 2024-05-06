@@ -27,8 +27,8 @@ function App() {
   return (
     <div className="App">
       <Header onSearchChange={handleSearchChange} onSearchSubmit={handleSearchSubmit} />
-      <Title pokemon_name={pokemon.name} />
-      <Canvas />
+      <Title pokemonName={pokemon.name} />
+      <Canvas spriteUrl={pokemon.sprite} />
     </div>
   );
 }
