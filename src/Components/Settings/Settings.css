@@ -1,4 +1,5 @@
 #settings {
     flex: 0 1 30px;
     padding-right: 50px;
+    min-width: 80px;
 }

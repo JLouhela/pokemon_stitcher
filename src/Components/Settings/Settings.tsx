@@ -8,7 +8,7 @@ interface Props {
 
 const Settings = (props: Props) => {
   return (
-    <div id='settings'></div>
+    <div id='settings'> </div>
   )
 }
 
