@@ -39,6 +39,16 @@ function getImageBounds(ctx: CanvasRenderingContext2D): ImageBounds {
 
 export function stripInvisiblePixels(ctx: CanvasRenderingContext2D): ImageData {
   const imageBounds = getImageBounds(ctx);
+  // Set one extra pixel on each side in case the image size is divisible by two
+  // This allows drawing centerline between pixels
+  if ((imageBounds.left - imageBounds.right) % 2 === 0) {
+    imageBounds.right += 1;
+  }
+  if ((imageBounds.top - imageBounds.bottom) % 2 === 0) {
+    console.log("hep");
+    imageBounds.bottom += 1;
+  }
+  console.log(imageBounds);
   const visibleImageData = ctx.getImageData(imageBounds.left, imageBounds.top, imageBounds.right - imageBounds.left + 1, imageBounds.bottom - imageBounds.top + 1);
   return visibleImageData;
 }
