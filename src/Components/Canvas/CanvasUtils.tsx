@@ -45,10 +45,8 @@ export function stripInvisiblePixels(ctx: CanvasRenderingContext2D): ImageData {
     imageBounds.right += 1;
   }
   if ((imageBounds.top - imageBounds.bottom) % 2 === 0) {
-    console.log("hep");
     imageBounds.bottom += 1;
   }
-  console.log(imageBounds);
   const visibleImageData = ctx.getImageData(imageBounds.left, imageBounds.top, imageBounds.right - imageBounds.left + 1, imageBounds.bottom - imageBounds.top + 1);
   return visibleImageData;
 }
@@ -76,11 +74,11 @@ export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageDa
   }
 }
 
-function drawCenterLine(ctx: CanvasRenderingContext2D): void {
+function drawCenterLine(ctx: CanvasRenderingContext2D, lineWidth: number, color: string): void {
   // Draw line through center of canvas
   // TODO: offset image by half a pixel to make it centered
-  ctx.strokeStyle = '#ff0000';
-  ctx.lineWidth = 5;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
   ctx.beginPath();
   ctx.moveTo(ctx.canvas.width / 2, 0);
   ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height);
@@ -91,22 +89,41 @@ function drawCenterLine(ctx: CanvasRenderingContext2D): void {
   ctx.stroke();
 }
 
-export function drawGrid(ctx: CanvasRenderingContext2D, scale: number): void {
-  ctx.strokeStyle = '#FFffff';
-  ctx.lineWidth = 1;
-  for (let x = 0; x < ctx.canvas.width; x += scale) {
+function drawGridLines(ctx: CanvasRenderingContext2D, spacing: number, lineWidth: number, color: string): void {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  // Draw in chunks of half grid size to make bolder grid expand from center
+  for (let x = ctx.canvas.width / 2; x < ctx.canvas.width; x += spacing) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, ctx.canvas.height);
     ctx.stroke();
   }
-  for (let y = 0; y < ctx.canvas.height; y += scale) {
+  for (let x = ctx.canvas.width / 2; x >= 0; x -= spacing) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, ctx.canvas.height);
+    ctx.stroke();
+  }
+  for (let y = ctx.canvas.height / 2; y < ctx.canvas.height; y += spacing) {
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(ctx.canvas.width, y);
     ctx.stroke();
   }
-  drawCenterLine(ctx);
+  for (let y = ctx.canvas.height / 2; y >= 0; y -= spacing) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(ctx.canvas.width, y);
+    ctx.stroke();
+  }
+}
+
+export function drawGrid(ctx: CanvasRenderingContext2D, scale: number): void {
+  const gridColor = "#555555";
+  drawGridLines(ctx, scale, 1, gridColor);
+  drawGridLines(ctx, scale * 5, 3, gridColor);
+  drawCenterLine(ctx, 5, "#AAAAAA");
 }
 
 export function getContext(canvasRef: React.RefObject<HTMLCanvasElement>): CanvasRenderingContext2D | null {
