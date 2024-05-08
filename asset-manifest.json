@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/react_pokemon_stitcher/static/css/main.f6567bbd.css",
-    "main.js": "/react_pokemon_stitcher/static/js/main.2bd7ee16.js",
-    "static/js/453.7accebf3.chunk.js": "/react_pokemon_stitcher/static/js/453.7accebf3.chunk.js",
-    "index.html": "/react_pokemon_stitcher/index.html",
-    "main.f6567bbd.css.map": "/react_pokemon_stitcher/static/css/main.f6567bbd.css.map",
-    "main.2bd7ee16.js.map": "/react_pokemon_stitcher/static/js/main.2bd7ee16.js.map",
-    "453.7accebf3.chunk.js.map": "/react_pokemon_stitcher/static/js/453.7accebf3.chunk.js.map"
+    "main.css": "/pokemon_stitcher/static/css/main.f6567bbd.css",
+    "main.js": "/pokemon_stitcher/static/js/main.e3aeba11.js",
+    "static/js/453.7accebf3.chunk.js": "/pokemon_stitcher/static/js/453.7accebf3.chunk.js",
+    "index.html": "/pokemon_stitcher/index.html",
+    "main.f6567bbd.css.map": "/pokemon_stitcher/static/css/main.f6567bbd.css.map",
+    "main.e3aeba11.js.map": "/pokemon_stitcher/static/js/main.e3aeba11.js.map",
+    "453.7accebf3.chunk.js.map": "/pokemon_stitcher/static/js/453.7accebf3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f6567bbd.css",
-    "static/js/main.2bd7ee16.js"
+    "static/js/main.e3aeba11.js"
   ]
 }
