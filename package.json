@@ -2,7 +2,7 @@
   "name": "react_pokemon_stitcher",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jlouhela.github.io/react_pokemon_stitcher",
+  "homepage": "https://jlouhela.github.io/pokemon_stitcher",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
