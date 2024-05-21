@@ -22,7 +22,6 @@ function App() {
     if (pokemon) {
       setPokemon(pokemon);
     } else {
-      // TODO add meaningful prit
       setPokemon({ name: `${search} not found!`, sprite: 'n/a' });
     }
   }
