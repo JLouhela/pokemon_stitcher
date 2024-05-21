@@ -69,9 +69,9 @@ export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageDa
         scaledImageData.data[index + 3] = imageData.data[i + 3];
       }
     }
-    // Set scaled image data to ctx
-    ctx.putImageData(scaledImageData, 0, 0);
   }
+  // Set scaled image data to ctx
+  ctx.putImageData(scaledImageData, 0, 0);
 }
 
 function drawCenterLine(ctx: CanvasRenderingContext2D, lineWidth: number, color: string): void {
