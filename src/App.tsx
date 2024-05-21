@@ -21,6 +21,9 @@ function App() {
     const pokemon = await getPokemon(search);
     if (pokemon) {
       setPokemon(pokemon);
+    } else {
+      // TODO add meaningful print
+      setPokemon({ name: "Pokémon not found!", sprite: 'n/a' });
     }
   }
 
