@@ -5,4 +5,7 @@ canvas {
     display: block;
     width: 100vw;
     height: auto;
+    image-rendering: optimizeSpeed;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
