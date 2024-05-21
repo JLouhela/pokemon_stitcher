@@ -1,4 +1,14 @@
-#logo {
-    flex: 0 1 30px;
-    padding-left: 50px;
+#logo img {
+    flex: 0 1 20px;
+    padding-left: 10px;
+    width: 80px;
+}
+
+
+@media (max-width: 768px) {
+    #logo img {
+        max-width: 40px;
+        max-height: 100%;
+    }
+
 }

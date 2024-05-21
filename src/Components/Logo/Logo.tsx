@@ -1,5 +1,6 @@
 import React from 'react'
 import "./Logo.css"
+import logo from "./logo.png"
 
 interface Props {
 
@@ -8,9 +9,7 @@ interface Props {
 const Logo = (props: Props) => {
   return (
     <div id="logo">
-      <h1>
-        Logo
-      </h1>
+      <img src={logo} alt={"pokeball-logo"} />
     </div>
   )
 }
