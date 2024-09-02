@@ -2,9 +2,6 @@ canvas {
     image-rendering: pixelated;
     border: 1px solid #ccc;
     background-color: rgb(255, 255, 255);
-    display: block;
-    width: 100vw;
-    height: auto;
     image-rendering: optimizeSpeed;
     image-rendering: pixelated;
     image-rendering: crisp-edges;

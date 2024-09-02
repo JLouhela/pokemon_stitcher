@@ -4,8 +4,8 @@ interface ImageBounds {
   right: number;
   top: number;
   bottom: number;
-
 }
+
 function getImageBounds(ctx: CanvasRenderingContext2D): ImageBounds {
   // Read pixels from ctx
   const imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -39,23 +39,25 @@ function getImageBounds(ctx: CanvasRenderingContext2D): ImageBounds {
 
 export function stripInvisiblePixels(ctx: CanvasRenderingContext2D): ImageData {
   const imageBounds = getImageBounds(ctx);
-  // Set one extra pixel on each side in case the image size is divisible by two
-  // This allows drawing centerline between pixels
-  if ((imageBounds.left - imageBounds.right) % 2 === 0) {
-    imageBounds.right += 1;
-  }
-  if ((imageBounds.top - imageBounds.bottom) % 2 === 0) {
-    imageBounds.bottom += 1;
-  }
   const visibleImageData = ctx.getImageData(imageBounds.left, imageBounds.top, imageBounds.right - imageBounds.left + 1, imageBounds.bottom - imageBounds.top + 1);
   return visibleImageData;
 }
 
-export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number): void {
-  ctx.canvas.width = imageData.width * scale;
-  ctx.canvas.height = imageData.height * scale;
-  // Copy imageData to new array
+export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageData): number {
+  const dpi = window.devicePixelRatio;
+  ctx.canvas.width = window.innerWidth;
+  ctx.canvas.height = imageData.height / imageData.width * window.innerWidth;
+
+  ctx.canvas.style.height = ctx.canvas.height + "px";
+  ctx.canvas.style.width = ctx.canvas.width + "px";
+  ctx.canvas.width *= dpi;
+  ctx.canvas.height *= dpi;
+  ctx.scale(dpi, dpi);
+
+  // Scale image to fill the screen
+  var scale = Math.floor(ctx.canvas.width / imageData.width);
   var scaledImageData = new ImageData(imageData.width * scale, imageData.height * scale);
+
   // Copy each pixel to the new array
   for (let i = 0; i < imageData.data.length; i += 4) {
     const x = (i / 4) % imageData.width;
@@ -72,58 +74,97 @@ export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageDa
   }
   // Set scaled image data to ctx
   ctx.putImageData(scaledImageData, 0, 0);
+  return scale;
 }
 
-function drawCenterLine(ctx: CanvasRenderingContext2D, lineWidth: number, color: string): void {
-  // Draw line through center of canvas
-  // TODO: offset image by half a pixel to make it centered
+interface PixelCenter {
+  x: number,
+  y: number
+}
+
+function getPixelCenter(ctx: CanvasRenderingContext2D, scale: number): PixelCenter {
+
+  var imageBounds = getImageBounds(ctx);
+  const dpi = window.devicePixelRatio;
+  scale /= dpi;
+
+  var x = (imageBounds.right - imageBounds.left) / dpi;
+  x = Math.floor(x / scale);
+  if (x % 2 !== 0) {
+    x += 1;
+  }
+  x = x * scale / 2;
+
+  var y = (imageBounds.bottom - imageBounds.top) / dpi;
+  y = Math.floor(y / scale);
+  if (y % 2 !== 0) {
+    y += 1;
+  }
+  y = y * scale / 2;
+
+  return { x: x + imageBounds.left, y: y + imageBounds.top };
+}
+
+function drawCenterLine(ctx: CanvasRenderingContext2D, scale: number, lineWidth: number, color: string, pixelCenter: PixelCenter): void {
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
+  const dpi = window.devicePixelRatio;
+  const height = ctx.canvas.height / dpi;
+  const width = ctx.canvas.width / dpi;
+
   ctx.beginPath();
-  ctx.moveTo(ctx.canvas.width / 2, 0);
-  ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height);
+  ctx.moveTo(pixelCenter.x, 0);
+  ctx.lineTo(pixelCenter.x, height);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(0, ctx.canvas.height / 2);
-  ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2);
+  ctx.moveTo(0, pixelCenter.y);
+  ctx.lineTo(width, pixelCenter.y);
   ctx.stroke();
 }
 
-function drawGridLines(ctx: CanvasRenderingContext2D, spacing: number, lineWidth: number, color: string): void {
+function drawGridLines(ctx: CanvasRenderingContext2D, spacing: number, lineWidth: number, color: string, pixelCenter: PixelCenter): void {
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
+
+  const dpi = window.devicePixelRatio;
+  spacing /= dpi;
+  const width = ctx.canvas.width / dpi;
+  const height = ctx.canvas.height / dpi;
+
   // Draw in chunks of half grid size to make bolder grid expand from center
-  for (let x = ctx.canvas.width / 2; x < ctx.canvas.width; x += spacing) {
+  for (let x = pixelCenter.x; x < width; x += spacing) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
-    ctx.lineTo(x, ctx.canvas.height);
+    ctx.lineTo(x, height);
     ctx.stroke();
   }
-  for (let x = ctx.canvas.width / 2; x >= 0; x -= spacing) {
+  for (let x = pixelCenter.x; x >= 0; x -= spacing) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
-    ctx.lineTo(x, ctx.canvas.height);
+    ctx.lineTo(x, height);
     ctx.stroke();
   }
-  for (let y = ctx.canvas.height / 2; y < ctx.canvas.height; y += spacing) {
+  for (let y = pixelCenter.y; y < height; y += spacing) {
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(ctx.canvas.width, y);
+    ctx.lineTo(width, y);
     ctx.stroke();
   }
-  for (let y = ctx.canvas.height / 2; y >= 0; y -= spacing) {
+  for (let y = pixelCenter.y; y >= 0; y -= spacing) {
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(ctx.canvas.width, y);
+    ctx.lineTo(width, y);
     ctx.stroke();
   }
 }
 
 export function drawGrid(ctx: CanvasRenderingContext2D, scale: number): void {
   const gridColor = "#555555";
-  drawGridLines(ctx, scale, 1, gridColor);
-  drawGridLines(ctx, scale * 5, 3, gridColor);
-  drawCenterLine(ctx, 5, "#AAAAAA");
+
+  const pixelCenter = getPixelCenter(ctx, scale);
+  drawGridLines(ctx, scale, 1, gridColor, pixelCenter);
+  drawGridLines(ctx, scale * 5, 3, gridColor, pixelCenter);
+  drawCenterLine(ctx, scale, 5, "#AAAAAA", pixelCenter);
 }
 
 export function getContext(canvasRef: React.RefObject<HTMLCanvasElement>): CanvasRenderingContext2D | null {
