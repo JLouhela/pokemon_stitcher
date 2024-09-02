@@ -45,9 +45,18 @@ export function stripInvisiblePixels(ctx: CanvasRenderingContext2D): ImageData {
 
 export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageData): number {
   const dpi = window.devicePixelRatio;
-  ctx.canvas.width = window.innerWidth;
-  ctx.canvas.height = imageData.height / imageData.width * window.innerWidth;
 
+  // TODO check aspect ratio and swap height / width handling
+  var scale = 1;
+  if (window.innerWidth >= window.innerHeight) {
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = imageData.height / imageData.width * window.innerWidth;
+    var scale = Math.floor(ctx.canvas.width * dpi / imageData.width);
+  } else {
+    ctx.canvas.height = window.innerHeight;
+    ctx.canvas.width = imageData.width / imageData.height * window.innerHeight;
+    var scale = Math.floor(ctx.canvas.height * dpi / imageData.height);
+  }
   ctx.canvas.style.height = ctx.canvas.height + "px";
   ctx.canvas.style.width = ctx.canvas.width + "px";
   ctx.canvas.width *= dpi;
@@ -55,7 +64,6 @@ export function scaleImageData(ctx: CanvasRenderingContext2D, imageData: ImageDa
   ctx.scale(dpi, dpi);
 
   // Scale image to fill the screen
-  var scale = Math.floor(ctx.canvas.width / imageData.width);
   var scaledImageData = new ImageData(imageData.width * scale, imageData.height * scale);
 
   // Copy each pixel to the new array

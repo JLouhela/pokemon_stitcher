@@ -5,4 +5,12 @@ canvas {
     image-rendering: optimizeSpeed;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+    canvas {
+        margin-top: 50px;
+    }
 }
